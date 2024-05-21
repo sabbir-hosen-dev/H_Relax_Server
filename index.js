@@ -41,8 +41,19 @@ async function run() {
     console.log("Connectted To MOngodb");
 
     const collaction = client
-      .db( process.env.DB_NAME)
+      .db(process.env.DB_NAME)
       .collection(process.env.DB_COLLECTION);
+
+    app.get("/getData", async (req, res) => {
+      try {
+        const data = await collaction
+          .find({ userEmail: "tssabbirhosen@gmail.com" })
+          .toArray();
+        res.send(data);
+      } catch (error) {
+        console.log(error);
+      }
+    });
 
     app.get("/bookdin", async (req, res) => {
       const email = req.query.email;
@@ -81,6 +92,10 @@ async function run() {
       } catch (err) {
         console.log(err);
       }
+    });
+
+    app.get("/", async (req, res) => {
+      res.send("server is running");
     });
 
     app.listen(PORT, () => {
